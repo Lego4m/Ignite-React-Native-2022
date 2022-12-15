@@ -1,4 +1,8 @@
-import { Heading, HStack, VStack, Text,  } from 'native-base';
+import { TouchableOpacity } from 'react-native';
+
+import { MaterialIcons } from '@expo/vector-icons';
+
+import { Heading, HStack, VStack, Text, Icon } from 'native-base';
 
 import { UserPhoto } from './UserPhoto';
 
@@ -21,6 +25,15 @@ export function HomeHeader() {
           Rodrigo
         </Heading>
       </VStack>
+
+      <TouchableOpacity>
+        <Icon 
+          as={MaterialIcons}
+          name='logout'
+          color='gray.200'
+          size={7}
+        />
+      </TouchableOpacity>
     </HStack>
   )
 }
