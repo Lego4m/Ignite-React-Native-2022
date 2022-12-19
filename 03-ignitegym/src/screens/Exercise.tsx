@@ -30,7 +30,7 @@ export function Exercise() {
 
         <HStack justifyContent='space-between' mt={4} mb={8} alignItems='center'>
           <Heading color='gray.100' fontSize='lg' flexShrink={1}>
-            Puxada frtontal
+            Puxada frontal
           </Heading>
 
           <HStack alignItems='center'>
@@ -58,6 +58,7 @@ export function Exercise() {
           <HStack alignItems='center' justifyContent='space-around' mb={6} mt={5}>
             <HStack>
               <SeriesSvg />
+              
               <Text color='gray.200' ml={2}>
                 3 séries
               </Text>
@@ -65,6 +66,7 @@ export function Exercise() {
 
             <HStack>
               <RepetitionsSvg />
+
               <Text color='gray.200' ml={2}>
                 12 repetições
               </Text>
