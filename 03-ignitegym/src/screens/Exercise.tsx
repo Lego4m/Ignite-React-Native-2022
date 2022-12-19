@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { Heading, HStack, Icon, Text, VStack, Image, Box } from 'native-base';
+import { Heading, HStack, Icon, Text, VStack, Image, Box, ScrollView } from 'native-base';
 
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
@@ -43,7 +43,7 @@ export function Exercise() {
         </HStack>
       </VStack>
 
-      <VStack p={8}>
+      <ScrollView _contentContainerStyle={{ padding: 8 }}>
         <Image 
           w='full'
           h={80}
@@ -75,7 +75,7 @@ export function Exercise() {
             title='Marcar como realizado'
           />
         </Box>
-      </VStack>
+      </ScrollView>
     </VStack>
   )
 }
