@@ -26,8 +26,8 @@ export function SignIn() {
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>();
 
-  function handleSignIn({ email, password }: FormDataProps) {
-    signIn(email, password);
+  async function handleSignIn({ email, password }: FormDataProps) {
+    await signIn(email, password);
   }
 
   function handleNewAccount() {
