@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from  'react';
 
 import { storageUserSave, storageUserGet, storageUserRemove } from '@storage/storageUser';
-import { storageAuthTokenSave } from '@storage/storageAuthToken';
+import { storageAuthTokenSave, storageAuthTokenGet } from '@storage/storageAuthToken';
 
 import { api } from '@services/api';
 
@@ -24,15 +24,18 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true);
 
-  async function storageUserAndToken(userData: UserDTO, token: string) {
+  function updateUserAndToken(userData: UserDTO, token: string) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    setUser(userData);
+  }
+
+  async function saveUserAndTokenInStorage(userData: UserDTO, token: string) {
     try {
       setIsLoadingUserStorageData(true);
 
       await storageUserSave(userData)
       await storageAuthTokenSave(token);
-      
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(userData);
+
     } catch (error) {
       throw error;
     } finally {
@@ -44,12 +47,14 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       const { data } = await api.post('/sessions', { email, password });
 
-      if (data.user || data.token) {
-        await storageUserAndToken(data.user, data.token);
+      if (data.user && data.token) {
+        await saveUserAndTokenInStorage(data.user, data.token);
+
+        updateUserAndToken(data.user, data.token);
       }
     } catch (error) {
       throw (error);
-    }
+    } 
   }
 
   async function signOut() {
@@ -70,9 +75,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function loadUserData() {
     try {
       const userLogged = await storageUserGet();
+      const token = await storageAuthTokenGet();
 
-      if (userLogged) {
-        setUser(userLogged);
+      if (userLogged && token) {
+        updateUserAndToken(userLogged, token);
       }
     } catch (error) {
       throw error;
