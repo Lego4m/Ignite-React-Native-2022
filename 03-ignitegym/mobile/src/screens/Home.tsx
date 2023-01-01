@@ -5,6 +5,8 @@ import { VStack, FlatList, HStack, Heading, Text, useToast } from 'native-base';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import { api } from '@services/api';
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
+
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
 import { HomeHeader } from '@components/HomeHeader';
@@ -17,7 +19,7 @@ export function Home() {
   const [groups, setGroups] = useState<string[]>();
   const [groupSelected, setGroupSelected] = useState('costas');
 
-  const [exercises, setExercises] = useState([]);
+  const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
   
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>()
@@ -47,7 +49,7 @@ export function Home() {
     try {
       const { data } = await api.get(`/exercises/bygroup/${groupSelected}`);
 
-      console.log(data);
+      setExercises(data);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError ? error.message : 'Não foi possível carregar os exercícios.';
@@ -102,7 +104,7 @@ export function Home() {
 
         <FlatList 
           data={exercises}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ExerciseCard onPress={handleOpenExerciseDetails} />
           )}
