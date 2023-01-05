@@ -61,7 +61,7 @@ export function Profile() {
   const [userPhoto, setUserPhoto] = useState('https://github.com/Lego4m.png');
 
   const toast = useToast();
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     defaultValues: {
@@ -109,6 +109,11 @@ export function Profile() {
       setIsUpdating(true);
 
       await api.put('/users', data);
+
+      await updateUserProfile({
+        ...user,
+        name: data.name
+      });
 
       toast.show({
         title: 'Perfil atualizado com sucesso!',
