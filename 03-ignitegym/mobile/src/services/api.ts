@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from 'axios';
 
 import { AppError } from '@utils/AppError';
 
+import { storageAuthTokenGet } from '@storage/storageAuthToken';
+
 type SignOut = () => void;
 
 type APIInstanceProps = AxiosInstance & {
@@ -16,10 +18,15 @@ api.registerInterceptTokenManager = signOut => {
   const interceptTokenManager = api
     .interceptors
     .response
-    .use((response) => response, (requestError) => {
+    .use((response) => response, async (requestError) => {
       if (requestError?.response?.status === 401) {  // Requisição não autorizada
         if (requestError.response.data?.message === 'token.expired' || requestError.response.data?.message === 'token.invalid') {
+          const oldToken = await storageAuthTokenGet();
 
+          if (!oldToken) { // usuário sem token
+            signOut();
+            return Promise.reject(requestError);
+          }
         }
 
         signOut();
